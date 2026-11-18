@@ -11,7 +11,7 @@ function is_active($page_name) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Avon'a katılarak kendi işinizin patronu olun. Esnek çalışma saatleriyle yüksek gelir elde etme fırsatını kaçırmayın. Hemen ücretsiz kayıt olun!">
-    <title>Avon Güzellik ve Kayıt Portalı</title>
+    <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') : 'Avon Güzellik ve Kayıt Portalı'; ?></title>
     
     <!-- CSS Dependencies -->
     <link rel="stylesheet" href="assets/css/style.css">

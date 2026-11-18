@@ -1,4 +1,41 @@
-<?php include 'header.php'; ?>
+<?php
+$pageTitle = 'Avon Temsilcisi Ol - Avon Üyelik ve Kayıt Formu';
+$pageDescription = 'Avon’a katıl, kendi işinin sahibi ol. Danışmanlara özel indirim ve kampanyalardan yararlan.';
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$siteUrl = $scheme . '://' . $host;
+include 'header.php';
+?>
+
+<script type="application/ld+json">
+<?php echo json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'WebPage',
+    'name' => 'Avon Danışmanı Ol | Avon Üyelik ve Kayıt Formu',
+    'description' => $pageDescription,
+    'url' => $siteUrl . '/index.php',
+    'inLanguage' => 'tr-TR',
+    'publisher' => [
+        '@type' => 'Organization',
+        'name' => 'Avon Türkiye',
+        'url' => $siteUrl
+    ]
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>
+</script>
+
+<script type="application/ld+json">
+<?php echo json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'ItemList',
+    'name' => 'Avon Danışmanı Olmanın Avantajları',
+    'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => 'Kaliteli ve Güvenilir Ürünler'],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => 'Güzelliği Paylaş'],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => 'Destekleyici Danışman Topluluğu'],
+        ['@type' => 'ListItem', 'position' => 4, 'name' => 'Performansına Göre Kazancını Artır']
+    ]
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>
+</script>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -6,8 +43,8 @@
             <!-- Left Hero Content (hero-left) -->
             <div class="hero-left">
                 <span class="badge">GÜZELLİK SENİNLE BAŞLAR</span>
-                <h1 class="hero-title">Avon'a Katıl,<br><span class="highlight">Güzelliğini</span><br><span class="highlight">İşe Dönüştür</span></h1>
-                <p class="hero-subtitle">Avon'un bir parçası ol, kendi işinin sahibi olarak özgürlüğünü kazan. Güzelliği paylaş, kazancını artır!</p>
+                <h1 class="hero-title">Avon Temsilcisi Ol <br><span class="highlight"> Avon Üyelik ve Kayıt Formu</span><br><span class="highlight"></span></h1>
+                <p class="hero-subtitle">Avon'a katıl, kendi işinin sahibi ol. Avon danışmanı olarak özel indirimlerden ve kampanyalardan yararlan, esnek çalışma ile ek gelir elde et. Hemen kayıt ol.</p>
                 
                 <!-- Horizontal Feature Items -->
                 <div class="hero-features-horizontal">
@@ -101,29 +138,31 @@
     <!-- Neden Avon Section -->
     <section class="section" style="background-color: var(--bg-white);">
         <div class="container">
-            <h2 class="text-center" style="font-size: 36px; font-weight: 700; margin-bottom: 10px;">Neden Avon?</h2>
-            <p class="text-center" style="color: var(--text-muted); max-width: 600px; margin: 0 auto 50px;">Avon ile çalışmanın hayatınıza katacağı benzersiz değerleri ve fırsatları keşfedin.</p>
+            <h2 class="text-center" style="font-size: 36px; font-weight: 700; margin-bottom: 10px;">Avon Temsilcisi Olmanın Ayrıcalıkları</h2>
+            <h2 class="text-center" style="color:#CF0F56;font-size: 36px; font-weight: 500; margin-bottom: 10px;">Avon Temsilcisi Olarak Kendi İşinin Patronu Ol</h2>
+            
+            <p class="text-center" style="color: var(--text-muted); max-width: 600px; margin: 0 auto 50px;">Avon temsilcisi olarak güvenilir ürünlerle çalışır, kendi çevrene güzellik önerileri sunar, destekleyici bir toplulukla büyür ve performansına göre kazancını artırabilirsin. İşte Avon temsilciliğini tercih edenlerin öne çıkardığı dört temel avantaj.</p>
             
             <div class="why-grid">
                 <div class="why-card">
                     <div class="why-icon"><i class="fas fa-award"></i></div>
-                    <h3>Kaliteli Ürünler</h3>
-                    <p>Dünyaca ünlü markaların kaliteli ve güvenilir, dermatolojik olarak test edilmiş kozmetik ürünleri.</p>
+                    <h3>Kaliteli ve Güvenilir Ürünler</h3>
+                    <p>Avon danışmanı olarak cilt bakımı, makyaj, parfüm ve kişisel bakım kategorilerinde geniş bir ürün yelpazesiyle çalışırsın. Tanınmış bir markanın ürünlerini sunmak, müşterilerinin sana güvenmesini kolaylaştırır.</p>
                 </div>
                 <div class="why-card">
                     <div class="why-icon"><i class="fas fa-share-alt"></i></div>
                     <h3>Güzelliği Paylaş</h3>
-                    <p>Güzelliği ve bakım önerilerini paylaşarak başkalarının hayatına dokunun, mutluluğu yayın.</p>
+                    <p>Kullandığın ürünleri ve bakım önerilerini arkadaşlarınla, ailenle ve sosyal çevrenle paylaş. Kendi deneyimini anlatarak başkalarının doğru ürünü bulmasına yardımcı olurken ilk müşterilerini de kazanırsın.</p>
                 </div>
                 <div class="why-card">
                     <div class="why-icon"><i class="fas fa-users"></i></div>
-                    <h3>Destekleyici Topluluk</h3>
-                    <p>Güçlü kadın topluluğumuzla hep birlikte büyüyelim, eğitimler ve motivasyonla birbirimizi destekleyelim.</p>
+                    <h3>Destekleyici Temsilci Topluluğu</h3>
+                    <p>Yeni başlasan da deneyimli olsan da yalnız değilsin. Eğitimler, deneyim paylaşımı ve motivasyon desteğiyle diğer temsilcilerle birlikte gelişirsin.</p>
                 </div>
                 <div class="why-card">
                     <div class="why-icon"><i class="fas fa-chart-line"></i></div>
-                    <h3>Kazancını Artır</h3>
-                    <p>Performansına ve satış hacmine göre kazancını katlama fırsatı yakala, ekonomik bağımsızlığını kazan.</p>
+                    <h3>Performansına Göre Kazancını Artır</h3>
+                    <p>Kazancın satış hacmine ve performansına göre şekillenir. Hedeflerini kendin belirler, çalıştıkça gelirini artırma fırsatı yakalarsın.</p>
                 </div>
             </div>
         </div>
@@ -135,29 +174,29 @@
             <!-- Left Side Advantages -->
             <div class="adv-content">
                 <span class="badge">AVANTAJLAR</span>
-                <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 20px;">Temsilci Olmanın Ayrıcalıkları</h2>
-                <p style="color: var(--text-muted);">Avon dünyasına katıldığınız andan itibaren sizi bekleyen harika avantajların tadını çıkarın.</p>
+                <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 20px;">Avon Temsilcisi Olmanın Ayrıcalıkları</h2>
+                <p style="color: var(--text-muted);">Avon temsilcisi olarak katıldığın andan itibaren başlangıç desteği, esnek çalışma düzeni, eğitimler, kampanyalar ve online sipariş altyapısından yararlanırsın. İşte temsilcilik sürecinde seni bekleyen başlıca olanaklar.</p>
                 
-                <ul class="adv-list">
+                <ul class="adv-list">   
                     <li class="adv-item">
                         <div class="adv-item-icon"><i class="fas fa-check"></i></div>
-                        <div><b>Ücretsiz kayıt ve başlangıç seti</b><br><span style="color: var(--text-muted); font-size: 14px;">Herhangi bir ek ücret ödemeden hemen başlayabilirsiniz.</span></div>
+                        <div><b>Ücretsiz kayıt ve başlangıç seti</b><br><span style="color: var(--text-muted); font-size: 14px;">Avon temsilcisi olmak için kayıt aşamasında üyelik ücreti ödemezsin. Başlangıç setinin içeriği ve koşulları dönemsel olarak değişebilir. Güncel bilgiyi başvurunun ardından seni arayan ekipten alabilirsin.</span></div>
                     </li>
                     <li class="adv-item">
                         <div class="adv-item-icon"><i class="fas fa-check"></i></div>
-                        <div><b>Esnek çalışma saatleri</b><br><span style="color: var(--text-muted); font-size: 14px;">Kendi zamanınızı kendiniz planlayın, evden veya dilediğiniz yerden çalışın.</span></div>
+                        <div><b>Esnek çalışma saatleri</b><br><span style="color: var(--text-muted); font-size: 14px;">Çalışma zamanını kendin planlarsın. Evden ya da istediğin bir yerden çalışabilir, temsilciliği günlük düzeninin yanında sürdürebilirsin.</span></div>
                     </li>
                     <li class="adv-item">
                         <div class="adv-item-icon"><i class="fas fa-check"></i></div>
-                        <div><b>Eğitim ve gelişim programları</b><br><span style="color: var(--text-muted); font-size: 14px;">Ücretsiz makyaj ve cilt bakımı eğitimleriyle uzmanlaşın.</span></div>
+                        <div><b>Eğitim ve gelişim programları</b><br><span style="color: var(--text-muted); font-size: 14px;">Makyaj ve cilt bakımı eğitimleriyle ürün bilgini geliştirir, müşterilerine daha doğru önerilerde bulunabilirsin. Eğitimlerin kapsamı için başvuru sonrası bilgi alabilirsin.</span></div>
                     </li>
                     <li class="adv-item">
                         <div class="adv-item-icon"><i class="fas fa-check"></i></div>
-                        <div><b>Özel kampanya ve ödüller</b><br><span style="color: var(--text-muted); font-size: 14px;">Hediyeler, tatiller ve yüksek oranlı satış komisyonları sizi bekliyor.</span></div>
+                        <div><b>Özel kampanya ve ödüller</b><br><span style="color: var(--text-muted); font-size: 14px;">Temsilcilere yönelik dönemsel kampanyalar, hedefe bağlı ödüller ve satışa göre değişen kazanç fırsatları sunulur. Detaylar dönemlere göre değişir.</span></div>
                     </li>
                     <li class="adv-item">
                         <div class="adv-item-icon"><i class="fas fa-check"></i></div>
-                        <div><b>Online sipariş ve destek</b><br><span style="color: var(--text-muted); font-size: 14px;">Müşterilerinizin siparişlerini tek tıkla kapılarına gönderin.</span></div>
+                        <div><b>Online sipariş ve destek</b><br><span style="color: var(--text-muted); font-size: 14px;">Müşterilerinin siparişlerini online olarak verebilir, siparişlerin adreslerine teslim edilmesini sağlayabilirsin. Süreç boyunca destek ekibine ulaşabilirsin.</span></div>
                     </li>
                 </ul>
             </div>
