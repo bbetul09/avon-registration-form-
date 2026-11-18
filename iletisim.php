@@ -1,14 +1,50 @@
-<?php include 'header.php'; ?>
+<?php
+require_once 'seo.php';
+require_once 'bot-guard.php';
+
+$pageTitle       = 'İletişim | Avon Temsilciliği Hakkında Bize Ulaşın';
+$pageDescription = 'Avon temsilciliği başvurusu, ürünler, sipariş ve kargo hakkındaki sorularınız için iletişim formunu doldurun; size en kısa sürede dönüş yapalım.';
+$pageUrl         = site_url('iletisim.php');
+$homeUrl         = site_base_url();
+
+$pageSchema = [
+    '@context' => 'https://schema.org',
+    '@graph'   => [
+        website_schema(),
+        [
+            '@type'       => 'ContactPage',
+            '@id'         => $pageUrl . '#webpage',
+            'url'         => $pageUrl,
+            'name'        => $pageTitle,
+            'description' => $pageDescription,
+            'inLanguage'  => 'tr-TR',
+            'isPartOf'    => ['@id' => $homeUrl . '#website'],
+            'breadcrumb'  => ['@id' => $pageUrl . '#breadcrumb'],
+        ],
+        breadcrumb_schema([['name' => 'İletişim', 'url' => $pageUrl]], $pageUrl . '#breadcrumb'),
+    ],
+];
+
+include 'header.php';
+?>
 
 <!-- Leaflet Map Assets -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
+    <!-- Breadcrumb -->
+    <nav class="container breadcrumb" aria-label="Sayfa konumu">
+        <ol>
+            <li><a href="index.php">Ana Sayfa</a></li>
+            <li aria-current="page">İletişim</li>
+        </ol>
+    </nav>
+
     <!-- Contact Section -->
-    <section class="section">
+    <section class="section" style="padding-top: 30px;" aria-labelledby="page-title">
         <div class="container">
-            <span class="badge" style="display: table; margin: 0 auto 15px;">İLETİŞİM</span>
-            <h1 class="text-center" style="font-size: 44px; font-weight: 700; margin-bottom: 50px;">Bize Ulaşın</h1>
+            <p class="badge" style="display: table; margin: 0 auto 15px;">İletişim</p>
+            <h1 id="page-title" class="text-center" style="font-size: 44px; font-weight: 700; margin-bottom: 50px;">Bize Ulaşın</h1>
             
             <div class="contact-grid">
                 <!-- Contact Info Panel -->
@@ -16,40 +52,40 @@
                     <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 20px;">İrtibat Bilgilerimiz</h2>
                     <p style="color: var(--text-muted); margin-bottom: 30px;">Sorularınız, iş ortaklığı talepleriniz ve danışmanlık başvurularınız için bizimle iletişime geçebilirsiniz.</p>
                     
-                    <div class="contact-info-list">
+                    <address class="contact-info-list" style="font-style: normal;">
                         <div class="contact-info-item">
-                            <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="contact-info-icon" aria-hidden="true"><i class="fas fa-map-marker-alt"></i></div>
                             <div class="contact-info-details">
-                                <h5>Adres</h5>
+                                <h3>Adres</h3>
                                 <p>Avon Kozmetik San. ve Tic. A.Ş.<br>Tekstilkent Bulvarı No:10-A, Esenler / İstanbul</p>
                             </div>
                         </div>
                         <div class="contact-info-item">
-                            <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
+                            <div class="contact-info-icon" aria-hidden="true"><i class="fas fa-envelope"></i></div>
                             <div class="contact-info-details">
-                                <h5>E-posta</h5>
-                                <p>info@avon.com.tr</p>
+                                <h3>E-posta</h3>
+                                <p><a href="mailto:<?php echo CONTACT_EMAIL; ?>" style="color: inherit;"><?php echo CONTACT_EMAIL; ?></a></p>
                             </div>
                         </div>
                         <div class="contact-info-item">
-                            <div class="contact-info-icon"><i class="fas fa-phone"></i></div>
+                            <div class="contact-info-icon" aria-hidden="true"><i class="fas fa-phone"></i></div>
                             <div class="contact-info-details">
-                                <h5>Telefon</h5>
-                                <p>0 (212) 556 10 00</p>
+                                <h3>Telefon</h3>
+                                <p><a href="tel:<?php echo CONTACT_PHONE_E164; ?>" style="color: inherit;"><?php echo CONTACT_PHONE_DISPLAY; ?></a></p>
                             </div>
                         </div>
                         <div class="contact-info-item">
-                            <div class="contact-info-icon"><i class="fas fa-clock"></i></div>
+                            <div class="contact-info-icon" aria-hidden="true"><i class="fas fa-clock"></i></div>
                             <div class="contact-info-details">
-                                <h5>Çalışma Saatleri</h5>
+                                <h3>Çalışma Saatleri</h3>
                                 <p>Hafta içi: 09:00 - 18:00</p>
                             </div>
                         </div>
-                    </div>
+                    </address>
 
                     <!-- Social Follow -->
                     <div class="social-follow-container" style="margin-top: 40px;">
-                        <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 15px; color: var(--text-main);">Bizi Sosyal Medyada Takip Edin</h4>
+                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 15px; color: var(--text-main);">Bizi Sosyal Medyada Takip Edin</h3>
                         <div class="social-links" style="margin-top:0;">
                             <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                             <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -67,6 +103,7 @@
                         <form id="contact-form" novalidate>
                             <!-- Form action identifier -->
                             <input type="hidden" name="action" value="contact">
+                            <?php echo bot_guard_fields('contact'); ?>
 
                             <!-- Alert Notifications -->
                             <div class="alert alert-success"></div>
@@ -74,19 +111,19 @@
 
                             <div class="form-group">
                                 <label for="full_name">Ad Soyad</label>
-                                <i class="fas fa-user form-icon" style="top:44px;"></i>
+                                <i class="fas fa-user form-icon" ></i>
                                 <input type="text" id="full_name" name="full_name" placeholder="Adınız Soyadınız" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="email">E-posta</label>
-                                <i class="fas fa-envelope form-icon" style="top:44px;"></i>
+                                <i class="fas fa-envelope form-icon" ></i>
                                 <input type="email" id="email" name="email" placeholder="E-posta adresiniz" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="subject">Konu</label>
-                                <i class="fas fa-info-circle form-icon" style="top:44px;"></i>
+                                <i class="fas fa-info-circle form-icon" ></i>
                                 <select id="subject" name="subject" required>
                                     <option value="" disabled selected>Lütfen Konu Seçin</option>
                                     <option value="Temsilcilik Başvurusu">Temsilcilik Başvurusu</option>
@@ -107,7 +144,7 @@
                     </div>
 
                     <!-- Map wrapper -->
-                    <div class="map-wrapper" id="map"></div>
+                    <div class="map-wrapper" id="map" role="region" aria-label="Adres haritası"></div>
                 </div>
             </div>
         </div>

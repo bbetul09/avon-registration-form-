@@ -1,6 +1,46 @@
 <?php
 header('Content-Type: application/json; charset=UTF-8');
 require_once 'db.php';
+require_once 'config.php';
+require_once 'bot-guard.php';
+
+/**
+ * Form bildirimini CONTACT_EMAIL adresine gönderir.
+ * $fields: ['Etiket' => 'değer', ...]  — değerler sanitize() ile HTML'e kaçırılmış hâlde gelir.
+ * Gönderim başarısız olsa da form akışını bozmaz; sonucu hata günlüğüne yazar.
+ */
+function send_notification($subject, array $fields, $replyTo) {
+    $clean = function ($v) {
+        // sanitize() çıktısını düz metne çevir, satır sonu enjeksiyonunu engelle
+        return trim(str_replace(["\r", "\n"], ' ', html_entity_decode($v, ENT_QUOTES, 'UTF-8')));
+    };
+
+    $body = '';
+    foreach ($fields as $label => $value) {
+        $value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+        $body .= $label . ': ' . $value . "\n";
+    }
+    $body .= "\nTarih: " . date('d.m.Y H:i') . "\n";
+
+    $host = isset($_SERVER['HTTP_HOST']) ? preg_replace('/[^a-z0-9.-]/i', '', $_SERVER['HTTP_HOST']) : 'localhost';
+    $host = preg_replace('/^www\./i', '', $host);
+
+    $headers   = [];
+    $headers[] = 'MIME-Version: 1.0';
+    $headers[] = 'Content-Type: text/plain; charset=UTF-8';
+    $headers[] = 'Content-Transfer-Encoding: 8bit';
+    $headers[] = 'From: ' . mb_encode_mimeheader('Avon Web Formu', 'UTF-8') . ' <noreply@' . $host . '>';
+    if (filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
+        $headers[] = 'Reply-To: ' . $replyTo;
+    }
+
+    $encodedSubject = mb_encode_mimeheader($clean($subject), 'UTF-8');
+    $sent = @mail(CONTACT_EMAIL, $encodedSubject, $body, implode("\r\n", $headers));
+    if (!$sent) {
+        error_log('Form bildirimi gönderilemedi: ' . $clean($subject));
+    }
+    return $sent;
+}
 
 // Check if request is POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -9,6 +49,22 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $action = isset($_POST['action']) ? sanitize($_POST['action']) : '';
+
+// Bot koruması
+$successMessages = [
+    'register' => 'Kayıt başvurunuz başarıyla alındı! Temsilcimiz sizinle en kısa sürede iletişime geçecektir.',
+    'contact'  => 'Mesajınız başarıyla iletildi! En kısa sürede dönüş sağlayacağız.',
+];
+if (isset($successMessages[$action])) {
+    $guard = bot_guard_check($action);
+    if (!$guard['ok']) {
+        // Bota başarılı görünür cevap ver, ama hiçbir şey kaydetme/gönderme
+        echo json_encode($guard['silent']
+            ? ['success' => true, 'message' => $successMessages[$action]]
+            : ['success' => false, 'message' => $guard['message']]);
+        exit;
+    }
+}
 
 if ($action === 'register') {
     // Extract inputs
@@ -41,6 +97,13 @@ if ($action === 'register') {
         ]);
 
         if ($result) {
+            send_notification('Yeni Temsilci Başvurusu: ' . $full_name, [
+                'Ad Soyad'   => $full_name,
+                'E-posta'    => $email,
+                'Telefon'    => $phone,
+                'Şehir'      => $city,
+                'İlgi Alanı' => $interest,
+            ], $email);
             echo json_encode(['success' => true, 'message' => 'Kayıt başvurunuz başarıyla alındı! Temsilcimiz sizinle en kısa sürede iletişime geçecektir.']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Kayıt işlemi başarısız oldu. Lütfen tekrar deneyin.']);
@@ -80,6 +143,12 @@ if ($action === 'contact') {
         ]);
 
         if ($result) {
+            send_notification('Yeni İletişim Mesajı: ' . $subject, [
+                'Ad Soyad' => $full_name,
+                'E-posta'  => $email,
+                'Konu'     => $subject,
+                'Mesaj'    => "\n" . $message,
+            ], $email);
             echo json_encode(['success' => true, 'message' => 'Mesajınız başarıyla iletildi! En kısa sürede dönüş sağlayacağız.']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Mesajınız gönderilemedi. Lütfen tekrar deneyin.']);

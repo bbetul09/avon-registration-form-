@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const formData = new FormData(form);
+            formData.append('js_check', 'ok'); // bot koruması: gerçek tarayıcı kontrolü
 
             try {
                 const response = await fetch(submitUrl, {

@@ -1,10 +1,12 @@
-<!-- Footer -->
+    </main>
+
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <h3">AVON</h3>
-                    <p>Güzellik dünyasına adım at. Avon temsilcisiolarak ürünleri kendi çevrenle paylaş, temsilcilere özel indirimlerden yararlan ve kendi işini kendi temposunda büyüt.</p>
+                    <h3>AVON</h3>
+                    <p>Güzellik dünyasına adım at. Avon temsilcisi olarak ürünleri kendi çevrenle paylaş, temsilcilere özel indirimlerden yararlan ve kendi işini kendi temposunda büyüt.</p>
                 </div>
                 <div class="footer-links">
                     <h4>Hızlı Menü</h4>

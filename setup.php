@@ -213,6 +213,9 @@ try {
             ]
         ];
 
+        // SEO uyumlu hazır yazılar (blog-seed.php)
+        $sample_posts = array_merge($sample_posts, require __DIR__ . '/blog-seed.php');
+
         $insert_blog = $pdo->prepare("INSERT INTO blog_posts (title, slug, category, excerpt, content, image_path) VALUES (:title, :slug, :category, :excerpt, :content, :image_path)");
         foreach ($sample_posts as $post) {
             $insert_blog->execute($post);

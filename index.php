@@ -1,49 +1,56 @@
 <?php
-$pageTitle = 'Avon Temsilcisi Ol - Avon Üyelik ve Kayıt Formu';
-$pageDescription = 'Avon’a katıl, kendi işinin sahibi ol. Danışmanlara özel indirim ve kampanyalardan yararlan.';
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-$siteUrl = $scheme . '://' . $host;
+require_once 'seo.php';
+require_once 'bot-guard.php';
+
+$pageTitle       = 'Avon Temsilcisi Ol - Avon Üyelik ve Kayıt Formu';
+$pageDescription = 'Avon temsilcisi olmak için ücretsiz kayıt formunu doldurun. Kendi işinizin sahibi olun, temsilcilere özel indirim ve kampanyalardan yararlanın, esnek çalışarak ek gelir elde edin.';
+$canonicalUrl    = site_base_url();
+$homeUrl         = site_base_url();
+
+$benefits = ['Kaliteli ve Güvenilir Ürünler', 'Güzelliği Paylaş', 'Destekleyici Temsilci Topluluğu', 'Performansına Göre Kazancını Artır'];
+$benefitItems = [];
+foreach ($benefits as $i => $b) {
+    $benefitItems[] = ['@type' => 'ListItem', 'position' => $i + 1, 'name' => $b];
+}
+
+$pageSchema = [
+    '@context' => 'https://schema.org',
+    '@graph'   => [
+        website_schema(),
+        [
+            '@type'       => 'WebPage',
+            '@id'         => $homeUrl . '#webpage',
+            'url'         => $homeUrl,
+            'name'        => $pageTitle,
+            'description' => $pageDescription,
+            'inLanguage'  => 'tr-TR',
+            'isPartOf'    => ['@id' => $homeUrl . '#website'],
+            'about'       => ['@type' => 'Brand', 'name' => 'Avon'],
+            'primaryImageOfPage' => ['@type' => 'ImageObject', 'url' => site_url('assets/images/business_woman.png')],
+            'potentialAction'    => [
+                '@type'  => 'RegisterAction',
+                'name'   => 'Avon temsilcisi kayıt başvurusu',
+                'target' => $homeUrl . '#register-form',
+            ],
+        ],
+        [
+            '@type'           => 'ItemList',
+            'name'            => 'Avon Temsilcisi Olmanın Avantajları',
+            'itemListElement' => $benefitItems,
+        ],
+    ],
+];
+
 include 'header.php';
 ?>
 
-<script type="application/ld+json">
-<?php echo json_encode([
-    '@context' => 'https://schema.org',
-    '@type' => 'WebPage',
-    'name' => 'Avon Danışmanı Ol | Avon Üyelik ve Kayıt Formu',
-    'description' => $pageDescription,
-    'url' => $siteUrl . '/index.php',
-    'inLanguage' => 'tr-TR',
-    'publisher' => [
-        '@type' => 'Organization',
-        'name' => 'Avon Türkiye',
-        'url' => $siteUrl
-    ]
-], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>
-</script>
-
-<script type="application/ld+json">
-<?php echo json_encode([
-    '@context' => 'https://schema.org',
-    '@type' => 'ItemList',
-    'name' => 'Avon Danışmanı Olmanın Avantajları',
-    'itemListElement' => [
-        ['@type' => 'ListItem', 'position' => 1, 'name' => 'Kaliteli ve Güvenilir Ürünler'],
-        ['@type' => 'ListItem', 'position' => 2, 'name' => 'Güzelliği Paylaş'],
-        ['@type' => 'ListItem', 'position' => 3, 'name' => 'Destekleyici Danışman Topluluğu'],
-        ['@type' => 'ListItem', 'position' => 4, 'name' => 'Performansına Göre Kazancını Artır']
-    ]
-], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>
-</script>
-
     <!-- Hero Section -->
-    <section class="hero-section">
+    <section class="hero-section" aria-labelledby="hero-title">
         <div class="container hero-grid">
             <!-- Left Hero Content (hero-left) -->
             <div class="hero-left">
-                <span class="badge">GÜZELLİK SENİNLE BAŞLAR</span>
-                <h1 class="hero-title">Avon Temsilcisi Ol <br><span class="highlight"> Avon Üyelik ve Kayıt Formu</span><br><span class="highlight"></span></h1>
+                <p class="badge">Güzellik Seninle Başlar</p>
+                <h1 id="hero-title" class="hero-title">Avon Temsilcisi Ol <br><span class="highlight">Avon Üyelik ve Kayıt Formu</span></h1>
                 <p class="hero-subtitle">Avon'a katıl, kendi işinin sahibi ol. Avon danışmanı olarak özel indirimlerden ve kampanyalardan yararlan, esnek çalışma ile ek gelir elde et. Hemen kayıt ol.</p>
                 
                 <!-- Horizontal Feature Items -->
@@ -80,6 +87,7 @@ include 'header.php';
                     <form id="register-form" novalidate>
                         <!-- Form identifier for submit-form.php -->
                         <input type="hidden" name="action" value="register">
+                        <?php echo bot_guard_fields('register'); ?>
 
                         <!-- Alert Notifications (Now inside form for JS selector) -->
                         <div class="alert alert-success"></div>
@@ -136,10 +144,10 @@ include 'header.php';
     </section>
 
     <!-- Neden Avon Section -->
-    <section class="section" style="background-color: var(--bg-white);">
+    <section class="section" style="background-color: var(--bg-white);" aria-labelledby="neden-avon">
         <div class="container">
-            <h2 class="text-center" style="font-size: 36px; font-weight: 700; margin-bottom: 10px;">Avon Temsilcisi Olmanın Ayrıcalıkları</h2>
-            <h2 class="text-center" style="color:#CF0F56;font-size: 36px; font-weight: 500; margin-bottom: 10px;">Avon Temsilcisi Olarak Kendi İşinin Patronu Ol</h2>
+            <h2 id="neden-avon" class="text-center" style="font-size: 36px; font-weight: 700; margin-bottom: 10px;">Neden Avon Temsilcisi Olmalısın?</h2>
+            <p class="text-center" style="color:#CF0F56;font-size: 36px; font-weight: 500; margin-bottom: 10px; line-height: 1.2;">Avon Temsilcisi Olarak Kendi İşinin Patronu Ol</p>
             
             <p class="text-center" style="color: var(--text-muted); max-width: 600px; margin: 0 auto 50px;">Avon temsilcisi olarak güvenilir ürünlerle çalışır, kendi çevrene güzellik önerileri sunar, destekleyici bir toplulukla büyür ve performansına göre kazancını artırabilirsin. İşte Avon temsilciliğini tercih edenlerin öne çıkardığı dört temel avantaj.</p>
             
@@ -169,12 +177,12 @@ include 'header.php';
     </section>
 
     <!-- Advantages Section -->
-    <section class="section">
+    <section class="section" aria-labelledby="avantajlar">
         <div class="container adv-grid">
             <!-- Left Side Advantages -->
             <div class="adv-content">
-                <span class="badge">AVANTAJLAR</span>
-                <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 20px;">Avon Temsilcisi Olmanın Ayrıcalıkları</h2>
+                <p class="badge">Avantajlar</p>
+                <h2 id="avantajlar" style="font-size: 32px; font-weight: 700; margin-bottom: 20px;">Avon Temsilciliğinde Seni Bekleyen Olanaklar</h2>
                 <p style="color: var(--text-muted);">Avon temsilcisi olarak katıldığın andan itibaren başlangıç desteği, esnek çalışma düzeni, eğitimler, kampanyalar ve online sipariş altyapısından yararlanırsın. İşte temsilcilik sürecinde seni bekleyen başlıca olanaklar.</p>
                 
                 <ul class="adv-list">   
@@ -202,16 +210,16 @@ include 'header.php';
             </div>
             
             <!-- Right Side Image -->
-            <div class="adv-image-container">
-                <img src="assets/images/business_woman.png" alt="Başarılı Avon Kadın Temsilcisi">
-            </div>
+            <figure class="adv-image-container" style="margin: 0;">
+                <img src="assets/images/business_woman.png" alt="Avon ürünleriyle kendi işini yöneten başarılı kadın temsilci" loading="lazy" decoding="async">
+            </figure>
         </div>
     </section>
 
     <!-- Testimonials Section -->
-    <section class="section testimonials-section">
+    <section class="section testimonials-section" aria-labelledby="yorumlar">
         <div class="container">
-            <h2 class="text-center" style="font-size: 36px; font-weight: 700; margin-bottom: 50px;">İlham Veren Kadınlardan</h2>
+            <h2 id="yorumlar" class="text-center" style="font-size: 36px; font-weight: 700; margin-bottom: 50px;">İlham Veren Kadınlardan</h2>
             
             <div class="testimonial-container">
                 <div class="testimonial-track">
@@ -240,7 +248,7 @@ include 'header.php';
     </section>
 
     <!-- Badges Strip -->
-    <section class="badges-strip">
+    <section class="badges-strip" aria-label="Hizmet güvenceleri">
         <div class="container badges-container">
             <div class="badge-strip-item">
                 <div class="badge-strip-icon"><i class="fas fa-sync-alt"></i></div>

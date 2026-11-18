@@ -214,6 +214,7 @@ include 'header.php';
                         <option value="Makyaj" <?php echo ($edit_post && $edit_post['category'] === 'Makyaj') ? 'selected' : ''; ?>>Makyaj</option>
                         <option value="Saç Bakımı" <?php echo ($edit_post && $edit_post['category'] === 'Saç Bakımı') ? 'selected' : ''; ?>>Saç Bakımı</option>
                         <option value="Güzellik İpuçları" <?php echo ($edit_post && $edit_post['category'] === 'Güzellik İpuçları') ? 'selected' : ''; ?>>Güzellik İpuçları</option>
+                        <option value="Temsilcilik" <?php echo ($edit_post && $edit_post['category'] === 'Temsilcilik') ? 'selected' : ''; ?>>Temsilcilik</option>
                     </select>
                 </div>
 
