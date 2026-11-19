@@ -17,18 +17,18 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     echo "\xEF\xBB\xBF";
 
     $output = fopen('php://output', 'w');
-    fputcsv($output, ['ID', 'Ad Soyad', 'E-posta', 'Telefon', 'Şehir', 'İlgi Alanı', 'Durum', 'Başvuru Tarihi']);
+    fputcsv($output, ['ID', 'Ad Soyad', 'E-posta', 'Telefon', 'Adres', 'Doğum Tarihi', 'Durum', 'Başvuru Tarihi']);
 
     try {
-        $stmt = $pdo->query("SELECT id, full_name, email, phone, city, interest, status, created_at FROM registrations ORDER BY created_at DESC");
+        $stmt = $pdo->query("SELECT id, full_name, email, phone, address, birth_date, status, created_at FROM registrations ORDER BY created_at DESC");
         while ($row = $stmt->fetch()) {
             fputcsv($output, [
                 $row['id'],
                 $row['full_name'],
                 $row['email'],
                 $row['phone'],
-                $row['city'],
-                $row['interest'],
+                $row['address'],
+                !empty($row['birth_date']) ? date('d.m.Y', strtotime($row['birth_date'])) : '',
                 $row['status'],
                 date('d.m.Y H:i', strtotime($row['created_at']))
             ]);
@@ -89,7 +89,7 @@ $query = "SELECT * FROM registrations WHERE 1=1";
 $params = [];
 
 if (!empty($search)) {
-    $query .= " AND (full_name LIKE :search OR email LIKE :search OR phone LIKE :search OR city LIKE :search)";
+    $query .= " AND (full_name LIKE :search OR email LIKE :search OR phone LIKE :search OR address LIKE :search)";
     $params['search'] = '%' . $search . '%';
 }
 
@@ -124,7 +124,7 @@ include 'header.php';
         <div class="panel-header">
             <!-- Search & Filters -->
             <form action="basvurular.php" method="GET" style="display: flex; gap: 15px; flex-wrap: wrap; flex-grow: 1;">
-                <input type="text" name="search" placeholder="İsim, telefon, şehir ara..." value="<?php echo htmlspecialchars($search); ?>" style="padding: 10px 15px; border: 1px solid var(--border-color); border-radius: 8px; min-width: 250px; outline:none;">
+                <input type="text" name="search" placeholder="İsim, telefon, adres ara..." value="<?php echo htmlspecialchars($search); ?>" style="padding: 10px 15px; border: 1px solid var(--border-color); border-radius: 8px; min-width: 250px; outline:none;">
                 
                 <select name="status_filter" style="padding: 10px 15px; border: 1px solid var(--border-color); border-radius: 8px; outline:none;">
                     <option value="">Tüm Durumlar</option>
@@ -152,8 +152,8 @@ include 'header.php';
                         <th>Başvuru Tarihi</th>
                         <th>Ad Soyad</th>
                         <th>E-posta / Telefon</th>
-                        <th>Şehir</th>
-                        <th>İlgi Alanı</th>
+                        <th>Adres</th>
+                        <th>Doğum Tarihi</th>
                         <th>Durum</th>
                         <th>İşlem</th>
                     </tr>
@@ -172,8 +172,8 @@ include 'header.php';
                                     <div style="font-size: 13px; color: var(--text-muted);"><i class="far fa-envelope"></i> <?php echo htmlspecialchars($reg['email']); ?></div>
                                     <div style="font-size: 13px; font-weight: 500;"><i class="fas fa-phone"></i> <?php echo htmlspecialchars($reg['phone']); ?></div>
                                 </td>
-                                <td><?php echo htmlspecialchars($reg['city']); ?></td>
-                                <td><span class="badge" style="margin-bottom:0; font-size:12px; padding:3px 8px;"><?php echo htmlspecialchars($reg['interest']); ?></span></td>
+                                <td><?php echo htmlspecialchars($reg['address']); ?></td>
+                                <td><?php echo !empty($reg['birth_date']) ? date('d.m.Y', strtotime($reg['birth_date'])) : '-'; ?></td>
                                 <td>
                                     <!-- Inline update status form -->
                                     <form action="basvurular.php?<?php echo http_build_query($_GET); ?>" method="POST" style="display: inline;">

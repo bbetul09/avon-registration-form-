@@ -112,22 +112,15 @@ include 'header.php';
                         </div>
 
                         <div class="form-group">
-                            <label for="city">Şehir</label>
+                            <label for="address">Adres</label>
                             <i class="fas fa-map-marker-alt form-icon"></i>
-                            <input type="text" id="city" name="city" placeholder="Şehir" required>
+                            <input type="text" id="address" name="address" placeholder="Adres" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="interest">İlgi Alanı</label>
-                            <i class="far fa-heart form-icon"></i>
-                            <select id="interest" name="interest" required>
-                                <option value="" disabled selected>İlgi Alanı</option>
-                                <option value="Cilt Bakımı">Cilt Bakımı</option>
-                                <option value="Makyaj">Makyaj</option>
-                                <option value="Parfüm & Deodorant">Parfüm & Deodorant</option>
-                                <option value="Saç Bakımı">Saç Bakımı</option>
-                                <option value="Kişisel Bakım">Kişisel Bakım</option>
-                            </select>
+                            <label for="birth_date">Doğum Tarihi</label>
+                            <i class="far fa-calendar-alt form-icon"></i>
+                            <input type="date" id="birth_date" name="birth_date" placeholder="Doğum Tarihi" required min="1900-01-01" max="<?php echo date('Y-m-d'); ?>">
                         </div>
 
                         <button type="submit" class="btn" style="width: 100%; font-size: 18px; border-radius: 8px;">Kayıt Ol</button>
@@ -227,18 +220,14 @@ include 'header.php';
                     <div class="testimonial-slide">
                         <p class="testimonial-quote">"Avon sayesinde hem kendi işimin patronu oldum hem de hayallerime bir adım daha yaklaştım. Güzelliği paylaşmak bana çok şey kattı."</p>
                         <div class="testimonial-author">
-                            <img src="assets/images/selin_profile.png" alt="Selin A." class="testimonial-avatar">
                             <span class="testimonial-name">Selin A.</span>
-                            <span class="testimonial-role">Avon Danışmanı</span>
                         </div>
                     </div>
                     <!-- Slide 2 (Sample clone to show slider functionality) -->
                     <div class="testimonial-slide">
                         <p class="testimonial-quote">"Esnek saatleri ve kazanç sistemi sayesinde çocuklarımı büyütürken bir yandan da kariyer basamaklarını hızla tırmandım. Teşekkürler Avon!"</p>
                         <div class="testimonial-author">
-                            <img src="assets/images/selin_profile.png" alt="Merve K." class="testimonial-avatar" style="filter: hue-rotate(45deg);">
                             <span class="testimonial-name">Merve K.</span>
-                            <span class="testimonial-role">Avon Altın Temsilci</span>
                         </div>
                     </div>
                 </div>

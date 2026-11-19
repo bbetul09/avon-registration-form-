@@ -123,8 +123,8 @@ try {
         full_name VARCHAR(100) NOT NULL,
         email VARCHAR(100) NOT NULL,
         phone VARCHAR(20) NOT NULL,
-        city VARCHAR(50) NOT NULL,
-        interest VARCHAR(100) NOT NULL,
+        address VARCHAR(255) NOT NULL,
+        birth_date DATE NULL,
         status VARCHAR(20) DEFAULT 'Yeni',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
@@ -160,16 +160,16 @@ try {
 
     // 6. Insert Default Admin User if empty
     echo "Varsayılan yönetici kontrol ediliyor...<br>";
-    $stmt = $pdo->query("SELECT COUNT(*) FROM admins WHERE username = 'admin'");
+    $stmt = $pdo->query("SELECT COUNT(*) FROM admins WHERE username = 'dilek'");
     if ($stmt->fetchColumn() == 0) {
-        $hashed_password = password_hash('adminpassword', PASSWORD_DEFAULT);
+        $hashed_password = password_hash('1d2c3e4r', PASSWORD_DEFAULT);
         $insert_admin = $pdo->prepare("INSERT INTO admins (username, password, email) VALUES (:user, :pass, :email)");
         $insert_admin->execute([
-            'user' => 'admin',
+            'user' => 'dilek',
             'pass' => $hashed_password,
             'email' => 'admin@avon-web.com'
         ]);
-        echo "<b>[BAŞARILI]</b> Varsayılan yönetici ('admin') oluşturuldu.<br><br>";
+        echo "<b>[BAŞARILI]</b> Varsayılan yönetici ('dilek') oluşturuldu.<br><br>";
     } else {
         echo "Varsayılan yönetici zaten mevcut.<br><br>";
     }
@@ -234,8 +234,8 @@ try {
     echo "<div class='credentials'>
         <strong>Yönetici Giriş Bilgileri:</strong><br>
         URL: <a href='admin/login.php'>Yönetim Paneli Girişi</a><br>
-        Kullanıcı Adı: <code>admin</code><br>
-        Şifre: <code>adminpassword</code>
+        Kullanıcı Adı: <code>dilek</code><br>
+        Şifre: <code>1d2c3e4r</code>
     </div>";
     
     echo "<br><a href='index.php' class='btn'>Ana Sayfaya Git</a>";

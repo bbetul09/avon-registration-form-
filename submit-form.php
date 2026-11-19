@@ -71,12 +71,18 @@ if ($action === 'register') {
     $full_name = isset($_POST['full_name']) ? sanitize($_POST['full_name']) : '';
     $email = isset($_POST['email']) ? sanitize($_POST['email']) : '';
     $phone = isset($_POST['phone']) ? sanitize($_POST['phone']) : '';
-    $city = isset($_POST['city']) ? sanitize($_POST['city']) : '';
-    $interest = isset($_POST['interest']) ? sanitize($_POST['interest']) : '';
+    $address = isset($_POST['address']) ? sanitize($_POST['address']) : '';
+    $birth_date = isset($_POST['birth_date']) ? trim($_POST['birth_date']) : '';
 
     // Validate inputs
-    if (empty($full_name) || empty($email) || empty($phone) || empty($city) || empty($interest)) {
+    if (empty($full_name) || empty($email) || empty($phone) || empty($address) || empty($birth_date)) {
         echo json_encode(['success' => false, 'message' => 'Lütfen tüm alanları doldurun.']);
+        exit;
+    }
+
+    $birth_dt = DateTime::createFromFormat('!Y-m-d', $birth_date);
+    if (!$birth_dt || $birth_dt->format('Y-m-d') !== $birth_date || $birth_dt > new DateTime('today') || (int)$birth_dt->format('Y') < 1900) {
+        echo json_encode(['success' => false, 'message' => 'Lütfen geçerli bir doğum tarihi girin.']);
         exit;
     }
 
@@ -87,13 +93,13 @@ if ($action === 'register') {
 
     try {
         // Insert into database
-        $stmt = $pdo->prepare("INSERT INTO registrations (full_name, email, phone, city, interest, status) VALUES (:name, :email, :phone, :city, :interest, 'Yeni')");
+        $stmt = $pdo->prepare("INSERT INTO registrations (full_name, email, phone, address, birth_date, status) VALUES (:name, :email, :phone, :address, :birth_date, 'Yeni')");
         $result = $stmt->execute([
             'name' => $full_name,
             'email' => $email,
             'phone' => $phone,
-            'city' => $city,
-            'interest' => $interest
+            'address' => $address,
+            'birth_date' => $birth_date
         ]);
 
         if ($result) {
@@ -101,8 +107,8 @@ if ($action === 'register') {
                 'Ad Soyad'   => $full_name,
                 'E-posta'    => $email,
                 'Telefon'    => $phone,
-                'Şehir'      => $city,
-                'İlgi Alanı' => $interest,
+                'Adres'        => $address,
+                'Doğum Tarihi' => $birth_dt->format('d.m.Y'),
             ], $email);
             echo json_encode(['success' => true, 'message' => 'Kayıt başvurunuz başarıyla alındı! Temsilcimiz sizinle en kısa sürede iletişime geçecektir.']);
         } else {

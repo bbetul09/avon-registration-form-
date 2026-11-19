@@ -40,7 +40,7 @@ Başvuru için aranan şartlar genel olarak sadelerdir:
 
 Başvuru süreci beş adımda özetlenebilir:
 
-1. **Formu doldurun.** [Avon temsilcisi kayıt formuna](index.php#register-form) ad soyad, telefon, e-posta, şehir ve ilgi alanınızı yazın. Form ücretsizdir.
+1. **Formu doldurun.** [Avon temsilcisi kayıt formuna](index.php#register-form) ad soyad, telefon, e-posta, adres ve doğum tarihinizi yazın. Form ücretsizdir.
 2. **Geri dönüşü bekleyin.** Başvurunuz bize ulaştıktan sonra sizinle telefon veya e-posta yoluyla iletişime geçilir.
 3. **Kaydınızı tamamlayın.** Görüşme sırasında kimlik ve iletişim bilgileriniz doğrulanır, temsilcilik kaydınız oluşturulur.
 4. **Ürünlerle tanışın.** Katalog ve kampanyalar hakkında bilgi alır, hangi kategorilerle başlamak istediğinize karar verirsiniz.

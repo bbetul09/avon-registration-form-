@@ -90,8 +90,8 @@ try {
                     <thead>
                         <tr>
                             <th>Ad Soyad</th>
-                            <th>Şehir</th>
-                            <th>İlgi Alanı</th>
+                            <th>Adres</th>
+                            <th>Doğum Tarihi</th>
                             <th>Durum</th>
                         </tr>
                     </thead>
@@ -104,8 +104,8 @@ try {
                             <?php foreach ($recent_regs as $reg): ?>
                                 <tr>
                                     <td><b><?php echo htmlspecialchars($reg['full_name']); ?></b></td>
-                                    <td><?php echo htmlspecialchars($reg['city']); ?></td>
-                                    <td><?php echo htmlspecialchars($reg['interest']); ?></td>
+                                    <td><?php echo htmlspecialchars($reg['address']); ?></td>
+                                    <td><?php echo !empty($reg['birth_date']) ? date('d.m.Y', strtotime($reg['birth_date'])) : '-'; ?></td>
                                     <td>
                                         <?php 
                                         $statusClass = strtolower(str_replace('ı', 'i', str_replace('Yeni', 'new', str_replace('İşleme Alındı', 'processing', str_replace('Ulaşıldı', 'contacted', str_replace('Reddedildi', 'rejected', $reg['status']))))));
