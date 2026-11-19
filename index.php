@@ -242,7 +242,7 @@ include 'header.php';
             <div class="badge-strip-item">
                 <div class="badge-strip-icon"><i class="fas fa-sync-alt"></i></div>
                 <div>
-                    <div class="badge-strip-text">30 Gün İçinde</div>
+                    <div class="badge-strip-text">40 Gün İçinde</div>
                     <div class="badge-strip-sub">Koşulsuz İade</div>
                 </div>
             </div>
@@ -257,7 +257,7 @@ include 'header.php';
                 <div class="badge-strip-icon"><i class="fas fa-truck"></i></div>
                 <div>
                     <div class="badge-strip-text">Ücretsiz Kargo</div>
-                    <div class="badge-strip-sub">750 TL ve Üzeri</div>
+                    <div class="badge-strip-sub">950 TL ve Üzeri</div>
                 </div>
             </div>
             <div class="badge-strip-item">
