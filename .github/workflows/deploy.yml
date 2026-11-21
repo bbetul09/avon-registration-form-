@@ -17,6 +17,8 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    env:
+      FTP_HOST: ${{ vars.AVON_FTP_PROTOCOL == 'ftp' && 'ftp.avonuyekayit.com' || 'mt-rohan.guzelhosting.com' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -38,7 +40,7 @@ jobs:
         continue-on-error: true
         uses: SamKirkland/FTP-Deploy-Action@8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65 # v4.3.5
         with: &ftp_settings
-          server: ${{ vars.AVON_FTP_PROTOCOL == 'ftp' && '104.247.165.210' || 'mt-rohan.guzelhosting.com' }}
+          server: ${{ env.FTP_HOST }}
           username: ${{ secrets.AVON_FTP_USERNAME }}
           password: ${{ secrets.AVON_FTP_PASSWORD }}
           protocol: ${{ vars.AVON_FTP_PROTOCOL || 'ftps' }}
@@ -52,4 +54,6 @@ jobs:
       - name: Retry website upload
         if: steps.ftp_upload.outcome == 'failure'
         uses: SamKirkland/FTP-Deploy-Action@8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65 # v4.3.5
+        env:
+          FTP_HOST: ${{ vars.AVON_FTP_PROTOCOL == 'ftp' && '104.247.165.210' || 'mt-rohan.guzelhosting.com' }}
         with: *ftp_settings
