@@ -10,36 +10,41 @@ require_once 'bot-guard.php';
  * Gönderim başarısız olsa da form akışını bozmaz; sonucu hata günlüğüne yazar.
  */
 function send_notification($subject, array $fields, $replyTo) {
-    $clean = function ($v) {
-        // sanitize() çıktısını düz metne çevir, satır sonu enjeksiyonunu engelle
-        return trim(str_replace(["\r", "\n"], ' ', html_entity_decode($v, ENT_QUOTES, 'UTF-8')));
-    };
-
-    $body = '';
-    foreach ($fields as $label => $value) {
-        $value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
-        $body .= $label . ': ' . $value . "\n";
-    }
-    $body .= "\nTarih: " . date('d.m.Y H:i') . "\n";
-
-    $host = isset($_SERVER['HTTP_HOST']) ? preg_replace('/[^a-z0-9.-]/i', '', $_SERVER['HTTP_HOST']) : 'localhost';
-    $host = preg_replace('/^www\./i', '', $host);
-
-    $headers   = [];
-    $headers[] = 'MIME-Version: 1.0';
-    $headers[] = 'Content-Type: text/plain; charset=UTF-8';
-    $headers[] = 'Content-Transfer-Encoding: 8bit';
-    $headers[] = 'From: ' . mb_encode_mimeheader('Avon Web Formu', 'UTF-8') . ' <noreply@' . $host . '>';
-    if (filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
-        $headers[] = 'Reply-To: ' . $replyTo;
+    if (!function_exists('mail') || !function_exists('mb_encode_mimeheader')) {
+        error_log('Form bildirimi gönderilemedi: mail() veya mbstring kullanılamıyor.');
+        return;
     }
 
-    $encodedSubject = mb_encode_mimeheader($clean($subject), 'UTF-8');
-    $sent = @mail(CONTACT_EMAIL, $encodedSubject, $body, implode("\r\n", $headers));
-    if (!$sent) {
-        error_log('Form bildirimi gönderilemedi: ' . $clean($subject));
+    try {
+        $plainSubject = html_entity_decode($subject, ENT_QUOTES, 'UTF-8');
+        $plainSubject = trim(str_replace(["\r", "\n"], ' ', $plainSubject));
+
+        $body = '';
+        foreach ($fields as $label => $value) {
+            $value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+            $body .= $label . ': ' . $value . "\n";
+        }
+        $body .= "\nTarih: " . date('d.m.Y H:i') . "\n";
+
+        $host = isset($_SERVER['HTTP_HOST']) ? preg_replace('/[^a-z0-9.-]/i', '', $_SERVER['HTTP_HOST']) : 'localhost';
+        $host = preg_replace('/^www\./i', '', $host);
+
+        $headers   = [];
+        $headers[] = 'MIME-Version: 1.0';
+        $headers[] = 'Content-Type: text/plain; charset=UTF-8';
+        $headers[] = 'Content-Transfer-Encoding: 8bit';
+        $headers[] = 'From: ' . mb_encode_mimeheader('Avon Web Formu', 'UTF-8') . ' <noreply@' . $host . '>';
+        if (filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
+            $headers[] = 'Reply-To: ' . $replyTo;
+        }
+
+        $encodedSubject = mb_encode_mimeheader($plainSubject, 'UTF-8');
+        if (!@mail(CONTACT_EMAIL, $encodedSubject, $body, implode("\r\n", $headers))) {
+            error_log('Form bildirimi gönderilemedi: mail() başarısız oldu.');
+        }
+    } catch (Throwable $e) {
+        error_log('Form bildirimi gönderilemedi: ' . get_class($e) . ' (satır ' . $e->getLine() . ').');
     }
-    return $sent;
 }
 
 // Check if request is POST

@@ -1,0 +1,74 @@
+name: Deploy Avon to Güzel Hosting
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: avon-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Prepare and lint website files
+        shell: bash
+        run: |
+          staging="$RUNNER_TEMP/avon-site"
+          mkdir -p "$staging"
+          git ls-files -z -- ':(top,glob)*.php' ':(top,glob)admin/*.php' assets/ \
+            ':(exclude)db.php' ':(exclude)config.php' ':(exclude)setup.php' ':(exclude)blog-seed.php' \
+            | tar --null -T - -cf - \
+            | tar -xf - -C "$staging"
+          find "$staging" -type f -name '*.php' -print0 | xargs -0 -r -n 1 php -l
+
+      - name: Install FTPS client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends lftp
+
+      - name: Upload website over explicit FTPS
+        shell: bash
+        working-directory: ${{ runner.temp }}/avon-site
+        env:
+          FTP_USERNAME: ${{ secrets.AVON_FTP_USERNAME }}
+          LFTP_PASSWORD: ${{ secrets.AVON_FTP_PASSWORD }}
+        run: |
+          if [[ -z "$FTP_USERNAME" || -z "$LFTP_PASSWORD" ]]; then
+            echo '::error::Add AVON_FTP_USERNAME and AVON_FTP_PASSWORD to the repository Actions secrets.'
+            exit 1
+          fi
+          if [[ ! "$FTP_USERNAME" =~ ^[a-zA-Z0-9._+@-]+$ ]]; then
+            echo '::error::Use the full FTP username shown in cPanel.'
+            exit 1
+          fi
+
+          lftp --norc <<EOF
+          set cmd:fail-exit yes
+          set net:timeout 20s
+          set net:max-retries 2
+          set ftp:ssl-force yes
+          set ftp:ssl-protect-data yes
+          set ftp:ssl-protect-list yes
+          set ssl:verify-certificate yes
+          set xfer:use-temp-file yes
+          set xfer:temp-file-name .htdeploy-*.tmp
+          open --env-password --user "$FTP_USERNAME" ftp://mt-rohan.guzelhosting.com:21
+          cd /
+          cls -d index.php
+          cls -d db.php
+          cls -d config.php
+          mirror --reverse --transfer-all --overwrite --no-perms --no-symlinks --verbose . /
+          bye
+          EOF
