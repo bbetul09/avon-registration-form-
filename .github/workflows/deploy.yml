@@ -34,8 +34,10 @@ jobs:
           find "$staging" -type f -name '*.php' -print0 | xargs -0 -r -n 1 php -l
 
       - name: Upload website
+        id: ftp_upload
+        continue-on-error: true
         uses: SamKirkland/FTP-Deploy-Action@8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65 # v4.3.5
-        with:
+        with: &ftp_settings
           server: ${{ vars.AVON_FTP_PROTOCOL == 'ftp' && '104.247.165.210' || 'mt-rohan.guzelhosting.com' }}
           username: ${{ secrets.AVON_FTP_USERNAME }}
           password: ${{ secrets.AVON_FTP_PASSWORD }}
@@ -45,3 +47,9 @@ jobs:
           server-dir: ./
           state-name: .ftp-deploy-avon-state.json
           security: strict
+          timeout: 60000
+
+      - name: Retry website upload
+        if: steps.ftp_upload.outcome == 'failure'
+        uses: SamKirkland/FTP-Deploy-Action@8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65 # v4.3.5
+        with: *ftp_settings

@@ -1,13 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Security Check
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header('Location: login.php');
-    exit;
-}
+require_once __DIR__ . '/auth.php';
 
 // Helper for active page link
 function is_admin_active($page_name) {
@@ -49,6 +41,11 @@ function is_admin_active($page_name) {
             <li>
                 <a href="blog-yonetimi.php" class="<?php echo is_admin_active('blog-yonetimi.php'); ?>">
                     <i class="fas fa-blog"></i> <span>Blog Yönetimi</span>
+                </a>
+            </li>
+            <li>
+                <a href="yoneticiler.php" class="<?php echo is_admin_active('yoneticiler.php'); ?>">
+                    <i class="fas fa-users-cog" aria-hidden="true"></i> <span>Yöneticiler</span>
                 </a>
             </li>
         </ul>
