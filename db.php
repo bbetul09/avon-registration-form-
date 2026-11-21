@@ -1,9 +1,9 @@
 <?php
 // Database configuration
 define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'avon_db');
+define('DB_USER', 'bizimevm_avon');
+define('DB_PASS', 'B1d2c3e4r.');
+define('DB_NAME', 'bizimevm_avonuye');
 
 try {
     // Connect without database name first in case we need to create it, 
